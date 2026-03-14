@@ -696,8 +696,8 @@ button {
 }
 
 .mic-btn {
-  width: 64px;
-  height: 64px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
   display: flex;
@@ -709,8 +709,8 @@ button {
 }
 
 .mic-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
 }
 
 .mic-btn--active {
@@ -719,16 +719,16 @@ button {
 
 @keyframes mic-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4), var(--shadow-glow-purple);
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.3), var(--shadow-glow-purple);
   }
   50% {
-    box-shadow: 0 0 0 16px rgba(139, 92, 246, 0), var(--shadow-glow-purple);
+    box-shadow: 0 0 0 12px rgba(139, 92, 246, 0), var(--shadow-glow-purple);
   }
 }
 
 .mic-btn svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   color: #fff;
 }
 

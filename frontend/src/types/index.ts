@@ -10,6 +10,7 @@ export interface AgentConfig {
   icon: string;
   color: string;
   category: 'subject' | 'creative' | 'navigator';
+  videoSrc?: string;
 }
 
 // WebSocket message types

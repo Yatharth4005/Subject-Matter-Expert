@@ -8,6 +8,7 @@ export const AGENTS: AgentConfig[] = [
     icon: '🧮',
     color: 'var(--accent-purple)',
     category: 'subject',
+    videoSrc: '/Actor_08_ref_calm.mp4',
   },
   {
     slug: 'physics',
@@ -16,6 +17,7 @@ export const AGENTS: AgentConfig[] = [
     icon: '⚛️',
     color: 'var(--accent-blue)',
     category: 'subject',
+    videoSrc: '/XiaoLinShuo_gen_en.mp4',
   },
   {
     slug: 'chemistry',
@@ -24,6 +26,7 @@ export const AGENTS: AgentConfig[] = [
     icon: '🧪',
     color: 'var(--accent-emerald)',
     category: 'subject',
+    videoSrc: '/DengLijun_gen_en.mp4',
   },
   {
     slug: 'biology',

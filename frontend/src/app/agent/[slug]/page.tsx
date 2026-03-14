@@ -264,13 +264,12 @@ export default function AgentPage() {
           alignItems: 'center', 
           justifyContent: 'center', 
           padding: '0 2rem',
-          paddingBottom: '160px' // Increased padding for higher stacked controls
         }}>
           <VoiceAvatar 
             state={avatarState} 
             icon={agent.icon} 
             subtitle={currentSubtitle} 
-            videoSrc={`/avatar${(AGENTS.indexOf(agent) % 3) + 1}.mp4`}
+            videoSrc={agent.videoSrc || `/avatar${(AGENTS.indexOf(agent) % 3) + 1}.mp4`}
           />
         </div>
 
@@ -308,15 +307,15 @@ export default function AgentPage() {
         {/* Unified Bottom Action Center (Single Bar) */}
         <div style={{
           position: 'absolute',
-          bottom: '2rem',
+          bottom: '1.5rem',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '100%',
-          maxWidth: '850px',
+          maxWidth: '780px',
           padding: '0 1rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: '16px',
+          gap: '12px',
           zIndex: 100
         }}>
           {/* End Session Row (Subtle) */}
@@ -342,37 +341,37 @@ export default function AgentPage() {
 
           {/* Combined Action Bar */}
           <div style={{
-            background: 'rgba(20, 20, 23, 0.9)',
-            backdropFilter: 'blur(30px)',
-            border: `1px solid ${avatarState === 'listening' ? 'var(--accent-purple)' : 'rgba(255,255,255,0.1)'}`,
-            borderRadius: '16px',
-            padding: '12px 24px',
+            background: 'rgba(15, 15, 18, 0.92)',
+            backdropFilter: 'blur(40px)',
+            border: `1px solid ${avatarState === 'listening' ? 'var(--accent-purple)' : 'rgba(255,255,255,0.08)'}`,
+            borderRadius: '14px',
+            padding: '8px 20px',
             display: 'flex',
             alignItems: 'center',
-            gap: '20px',
-            boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
-            transition: 'border-color 0.3s ease'
+            gap: '16px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+            transition: 'all 0.3s ease'
           }}>
             {/* Left: Attachment */}
             <button 
               onClick={() => document.getElementById('integrated-upload')?.click()}
               style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '10px',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                width: '38px',
+                height: '38px',
+                borderRadius: '8px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                fontSize: '1.2rem',
+                fontSize: '1.1rem',
                 flexShrink: 0
               }}
               title="Attach media"
-              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.12)'}
-              onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
             >
               📎
             </button>
@@ -405,17 +404,17 @@ export default function AgentPage() {
               <button 
                 onClick={() => setShowSuggestions(!showSuggestions)}
                 style={{
-                  padding: '8px 16px',
-                  background: suggestions.length > 0 ? 'rgba(124, 58, 237, 0.15)' : 'rgba(255,255,255,0.05)',
-                  border: `1px solid ${suggestions.length > 0 ? 'rgba(124, 58, 237, 0.4)' : 'rgba(255,255,255,0.1)'}`,
-                  borderRadius: '10px',
-                  color: suggestions.length > 0 ? '#a78bfa' : 'rgba(255,255,255,0.6)',
-                  fontSize: '0.85rem',
+                  padding: '6px 14px',
+                  background: suggestions.length > 0 ? 'rgba(139, 92, 246, 0.12)' : 'rgba(255,255,255,0.04)',
+                  border: `1px solid ${suggestions.length > 0 ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255,255,255,0.08)'}`,
+                  borderRadius: '8px',
+                  color: suggestions.length > 0 ? '#a78bfa' : 'rgba(255,255,255,0.5)',
+                  fontSize: '0.8rem',
                   fontWeight: 600,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '6px',
                   transition: 'all 0.2s'
                 }}
               >
@@ -423,10 +422,10 @@ export default function AgentPage() {
                 <span>Resources</span>
                 {suggestions.length > 0 && (
                   <span style={{
-                    background: '#a78bfa',
-                    color: '#000',
-                    fontSize: '10px',
-                    padding: '1px 6px',
+                    background: '#8b5cf6',
+                    color: '#fff',
+                    fontSize: '9px',
+                    padding: '1px 5px',
                     borderRadius: '10px',
                     marginLeft: '2px'
                   }}>{suggestions.length}</span>
