@@ -18,37 +18,47 @@ class ConversationStore:
 
     async def create_conversation(
         self, user_id: str, agent_slug: str, title: Optional[str] = None
-    ) -> str:
+    ) -> Optional[str]:
         conv_id = str(uuid.uuid4())
-        with self._get_conn() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """INSERT INTO conversations (id, user_id, agent_slug, title, started_at)
-                       VALUES (%s, %s, %s, %s, %s)""",
-                    (conv_id, user_id, agent_slug, title or f"Session with {agent_slug}", datetime.utcnow()),
-                )
-            conn.commit()
-        return conv_id
+        try:
+            with self._get_conn() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """INSERT INTO conversations (id, user_id, agent_slug, title, started_at)
+                           VALUES (%s, %s, %s, %s, %s)""",
+                        (conv_id, user_id, agent_slug, title or f"Session with {agent_slug}", datetime.utcnow()),
+                    )
+                conn.commit()
+            return conv_id
+        except Exception as e:
+            print(f"Database error in create_conversation: {e}")
+            return None
 
     async def log_message(
         self,
-        conversation_id: str,
+        conversation_id: Optional[str],
         role: str,
         content_type: str,
         content: Optional[str] = None,
         audio_url: Optional[str] = None,
         media_url: Optional[str] = None,
-    ) -> str:
+    ) -> Optional[str]:
+        if not conversation_id:
+            return None
         msg_id = str(uuid.uuid4())
-        with self._get_conn() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """INSERT INTO messages (id, conversation_id, role, content_type, content, audio_url, media_url, created_at)
-                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
-                    (msg_id, conversation_id, role, content_type, content, audio_url, media_url, datetime.utcnow()),
-                )
-            conn.commit()
-        return msg_id
+        try:
+            with self._get_conn() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """INSERT INTO messages (id, conversation_id, role, content_type, content, audio_url, media_url, created_at)
+                           VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                        (msg_id, conversation_id, role, content_type, content, audio_url, media_url, datetime.utcnow()),
+                    )
+                conn.commit()
+            return msg_id
+        except Exception as e:
+            print(f"Database error in log_message: {e}")
+            return None
 
     async def end_conversation(self, conversation_id: str):
         with self._get_conn() as conn:
