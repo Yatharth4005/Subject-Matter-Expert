@@ -20,7 +20,6 @@ COPY . .
 
 # Environment variables
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8080
 
-# Run uvicorn on the port provided by Cloud Run
-CMD uvicorn main:app --host 0.0.0.0 --port $PORT
+# Use shell form for CMD to allow environment variable interpolation
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
