@@ -1,0 +1,24 @@
+# Environment files
+.env
+.env.local
+.env.*
+backend/.env
+
+# Dependencies
+node_modules/
+backend/__pycache__/
+.venv/
+.next/
+
+# Build outputs
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+*.pem
+*.tsbuildinfo
+next-env.d.ts
