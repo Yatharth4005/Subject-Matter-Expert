@@ -1,18 +1,26 @@
-# --- Stage 1: Build Frontend ---
+# --- Build Stage: Frontend ---
 FROM node:20-alpine AS frontend-builder
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ .
-ENV NODE_ENV=production
 RUN npm run build
 
-# --- Stage 2: Final Image ---
+# --- Build Stage: Backend ---
+FROM python:3.11-slim AS backend-builder
+WORKDIR /app/backend
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/ .
+
+# --- Final Production Image ---
 FROM python:3.11-slim
 
-# Install Node.js in the Python image to run the Next.js server
+# Install Node.js, Nginx, and Chrome dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    nginx \
+    gnupg \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
@@ -20,27 +28,27 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy Backend
-COPY backend/requirements.txt ./backend/
-RUN pip install --no-cache-dir -r ./backend/requirements.txt
+COPY --from=backend-builder /app/backend /app/backend
+RUN pip install --no-cache-dir -r /app/backend/requirements.txt
 RUN playwright install chromium && playwright install-deps
-COPY backend/ ./backend/
 
-# Copy Frontend Build from Stage 1
-COPY --from=frontend-builder /app/frontend/.next/standalone ./frontend/
-COPY --from=frontend-builder /app/frontend/.next/static ./frontend/.next/static
-COPY --from=frontend-builder /app/frontend/public ./frontend/public
+# Copy Frontend Standalone
+COPY --from=frontend-builder /app/frontend/.next/standalone /app/frontend
+COPY --from=frontend-builder /app/frontend/.next/static /app/frontend/.next/static
+COPY --from=frontend-builder /app/frontend/public /app/frontend/public
 
-# Copy start script
-COPY start.sh ./
-RUN chmod +x start.sh
+# Setup Nginx
+COPY nginx.conf /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
-# Expose ports
-EXPOSE 3000
-EXPOSE 8000
+# Copy Start Script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
-# Next.js usually runs on 3000, and FastAPI on 8000. 
-# Cloud Run typically expects only one EXPOSE port to be linked to the traffic.
-# We'll use 3000 as the main port for traffic if used on Cloud Run.
-ENV PORT=3000
+# Environment Variables
+ENV NODE_ENV=production
+ENV PORT=8080
 
-CMD ["./start.sh"]
+EXPOSE 8080
+
+CMD ["/app/start.sh"]

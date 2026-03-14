@@ -1,11 +1,15 @@
 #!/bin/bash
 
-# Start the Backend (FastAPI)
-echo "🚀 Starting Backend (uvicorn)..."
+# Start the backend
+echo "Starting Backend..."
 cd /app/backend
 uvicorn main:app --host 0.0.0.0 --port 8000 &
 
-# Start the Frontend (Next.js)
-echo "🚀 Starting Frontend (node)..."
+# Start the frontend
+echo "Starting Frontend..."
 cd /app/frontend
-node server.js
+node server.js &
+
+# Start Nginx in foreground
+echo "Starting Nginx..."
+nginx -g "daemon off;"
