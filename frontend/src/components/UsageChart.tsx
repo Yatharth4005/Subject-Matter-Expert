@@ -36,7 +36,8 @@ export default function UsageChart({ data, label = 'Sessions per day' }: UsageCh
     ctx.clearRect(0, 0, width, height);
 
     // Grid lines
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    // Grid lines
+    ctx.strokeStyle = 'rgba(0,0,0,0.05)';
     ctx.lineWidth = 1;
     for (let i = 0; i <= 4; i++) {
       const y = padding.top + (chartH / 4) * i;
@@ -46,8 +47,8 @@ export default function UsageChart({ data, label = 'Sessions per day' }: UsageCh
       ctx.stroke();
 
       // Y-axis labels
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
-      ctx.font = '10px Inter, sans-serif';
+      ctx.fillStyle = 'var(--text-muted)';
+      ctx.font = '10px var(--font-sans)';
       ctx.textAlign = 'right';
       const val = Math.round(max - (max / 4) * i);
       ctx.fillText(val.toString(), padding.left - 8, y + 3);
@@ -61,8 +62,8 @@ export default function UsageChart({ data, label = 'Sessions per day' }: UsageCh
 
     // Gradient fill
     const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartH);
-    gradient.addColorStop(0, 'rgba(139, 92, 246, 0.2)');
-    gradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+    gradient.addColorStop(0, 'rgba(157, 23, 77, 0.1)');
+    gradient.addColorStop(1, 'rgba(157, 23, 77, 0.0)');
 
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
@@ -83,7 +84,7 @@ export default function UsageChart({ data, label = 'Sessions per day' }: UsageCh
       const cx = (points[i - 1].x + points[i].x) / 2;
       ctx.bezierCurveTo(cx, points[i - 1].y, cx, points[i].y, points[i].x, points[i].y);
     }
-    ctx.strokeStyle = '#8b5cf6';
+    ctx.strokeStyle = 'var(--accent-rose)';
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -91,16 +92,16 @@ export default function UsageChart({ data, label = 'Sessions per day' }: UsageCh
     points.forEach((p) => {
       ctx.beginPath();
       ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-      ctx.fillStyle = '#8b5cf6';
+      ctx.fillStyle = 'var(--accent-rose)';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(139,92,246,0.3)';
-      ctx.lineWidth = 4;
+      ctx.strokeStyle = 'rgba(157, 23, 77, 0.2)';
+      ctx.lineWidth = 5;
       ctx.stroke();
     });
 
     // X-axis labels (show every 5th)
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.font = '10px Inter, sans-serif';
+    ctx.fillStyle = 'var(--text-muted)';
+    ctx.font = '10px var(--font-sans)';
     ctx.textAlign = 'center';
     data.forEach((_, i) => {
       if (i % 5 === 0 || i === data.length - 1) {

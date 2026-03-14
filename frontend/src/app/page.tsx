@@ -31,8 +31,8 @@ export default async function DashboardPage() {
       {/* Header */}
       <header className="header">
         <div className="header__brand">
-          <h1 className="header__logo">SME Agent</h1>
-          <span className="header__tagline">Subject Matter Expert Platform</span>
+          <h1 className="header__logo">SME Portal</h1>
+          <span className="header__tagline">Earth & Sage Wisdom</span>
         </div>
         <div className="header__user">
           {session?.user?.image && (
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
       <UsageChart data={mockStats.dailySessions} />
 
       {/* Agent Grid */}
-      <h2 className="section-title">Choose Your Expert</h2>
+      <h2 className="section-title">Meet Your Experts</h2>
       <div className="agent-grid" id="agent-grid">
         {AGENTS.map((agent) => (
           <AgentCard key={agent.slug} agent={agent} />

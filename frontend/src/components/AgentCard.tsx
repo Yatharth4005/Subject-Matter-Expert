@@ -16,17 +16,8 @@ export default function AgentCard({ agent }: AgentCardProps) {
 
   return (
     <Link href={`/agent/${agent.slug}`}>
-      <div
-        className="agent-card"
-        style={{
-          '--card-accent': agent.color,
-          '--card-glow': agent.color.replace(')', ', 0.12)').replace('var(', 'rgba(').replace('--accent-', ''),
-        } as React.CSSProperties}
-      >
-        <div
-          className="agent-card__icon"
-          style={{ background: `${agent.color}15` }}
-        >
+      <div className="agent-card">
+        <div className="agent-card__icon">
           {agent.icon}
         </div>
         <h3 className="agent-card__name">{agent.displayName}</h3>

@@ -64,10 +64,7 @@ export default function StatsCard({
   return (
     <div className="stats-card">
       <div className="stats-card__header">
-        <div
-          className="stats-card__icon"
-          style={{ background: `${accentColor}15` }}
-        >
+        <div className="stats-card__icon">
           {icon}
         </div>
         <span className="stats-card__title">{title}</span>

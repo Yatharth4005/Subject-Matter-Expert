@@ -10,14 +10,14 @@ interface VoiceAvatarProps {
   videoSrc?: string;
 }
 
-export default function VoiceAvatar({ state, color = 'var(--accent-purple)', subtitle, videoSrc = '/avatar1.mp4' }: VoiceAvatarProps) {
+export default function VoiceAvatar({ state, color = 'var(--accent-sage)', subtitle, videoSrc = '/avatar1.mp4' }: VoiceAvatarProps) {
   const [scale, setScale] = useState(1);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (state === 'speaking') {
-      interval = setInterval(() => setScale(1 + Math.random() * 0.05), 150);
+      interval = setInterval(() => setScale(1 + Math.random() * 0.08), 120);
       if (videoRef.current) {
         videoRef.current.play().catch(err => console.error("Video play failed:", err));
       }
@@ -25,7 +25,6 @@ export default function VoiceAvatar({ state, color = 'var(--accent-purple)', sub
       setScale(1);
       if (videoRef.current) {
         videoRef.current.pause();
-        // Reset to first frame when idle to act as a still image
         videoRef.current.currentTime = 0;
       }
     }
@@ -40,38 +39,38 @@ export default function VoiceAvatar({ state, color = 'var(--accent-purple)', sub
       flexDirection: 'column',
       height: '100%',
       width: '100%',
-      position: 'relative'
+      position: 'relative',
+      zIndex: 10
     }}>
-      {/* Outer Glow Effect */}
+      {/* Immersive Depth Glow */}
       <div style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: `translate(-50%, -50%) scale(${state === 'speaking' ? scale : 1})`,
-        width: '100%',
-        maxWidth: '960px',
-        aspectRatio: '16/9',
-        background: `radial-gradient(ellipse at center, ${color}33 0%, transparent 70%)`,
-        transition: 'opacity 0.4s ease, transform 0.2s ease-out',
+        width: '130%',
+        maxWidth: '900px',
+        aspectRatio: '1',
+        background: `radial-gradient(circle at center, ${color}1a 0%, transparent 65%)`,
+        transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         opacity: state !== 'idle' ? 1 : 0.4,
         zIndex: 0,
       }} />
 
-      {/* Core Video Player Container */}
+      {/* Expert Frame */}
       <div style={{
         width: '100%',
-        maxWidth: '720px',
+        maxWidth: '800px',
         aspectRatio: '16/9',
-        borderRadius: '16px',
-        background: '#050505',
-        border: `2px solid ${state === 'speaking' ? color : 'var(--border-subtle)'}`,
-        boxShadow: state !== 'idle' ? `0 0 ${30 * scale}px ${color}33` : '0 10px 40px rgba(0,0,0,0.6)',
+        borderRadius: 'var(--radius-xl)',
+        background: '#000',
+        border: `3px solid ${state === 'speaking' ? color : 'var(--border-subtle)'}`,
+        boxShadow: state === 'speaking' ? 'var(--shadow-xl)' : 'var(--shadow-lg)',
         overflow: 'hidden',
         position: 'relative',
         zIndex: 10,
-        transition: 'box-shadow 0.2s ease, border-color 0.4s ease',
+        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
       }}>
-        {/* The Realistic Human Video */}
         <video 
           ref={videoRef}
           src={videoSrc}
@@ -81,68 +80,59 @@ export default function VoiceAvatar({ state, color = 'var(--accent-purple)', sub
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'contain',
-            background: '#0a0a0a',
+            objectFit: 'cover',
+            opacity: state === 'idle' ? 0.6 : 1,
+            transition: 'opacity 0.6s'
           }}
         />
         
-        {/* Dark overlay for better text readability */}
+        {/* Subtle Vignette */}
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(transparent 70%, rgba(0,0,0,0.6) 100%)',
+          background: 'radial-gradient(circle at center, transparent 30%, rgba(26, 36, 33, 0.2) 100%)',
           pointerEvents: 'none'
         }} />
 
-        {/* Professional Rolling Subtitles Overlay (Max 2 Lines) */}
+        {/* Floating Subtitle Portal */}
         <div style={{
           position: 'absolute',
-          bottom: '6%',
+          bottom: '10%',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '90%',
-          maxWidth: '650px',
+          width: '75%',
           zIndex: 40,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: '4px',
           pointerEvents: 'none',
-          transition: 'all 0.3s ease'
         }}>
           {subtitle && (
             <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: '100%',
+              background: 'rgba(255, 255, 255, 0.98)',
+              border: '1px solid var(--border-subtle)',
+              padding: '10px 24px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '1.2rem',
+              lineHeight: 1.4,
+              fontWeight: 400,
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-serif)',
+              textAlign: 'center',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+              animation: 'subtitle-enter 0.3s ease-out',
+              maxHeight: '120px',
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
             }}>
-              <span style={{
-                background: 'rgba(0, 0, 0, 0.75)',
-                padding: '4px 16px',
-                borderRadius: '4px',
-                fontSize: '1rem',
-                lineHeight: 1.4,
-                fontWeight: 500,
-                color: '#ffffff',
-                textShadow: '0 1px 2px rgba(0,0,0,1)',
-                fontFamily: '"Inter", "Roboto", sans-serif',
-                textAlign: 'center',
-                maxHeight: '3.2em', // Approximately 2 lines
-                overflow: 'hidden',
-                display: '-webkit-box',
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: 'vertical',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-              }}>
-                {subtitle}
-              </span>
+              {/* Show the most recent part of the subtitle */}
+              {subtitle.length > 200 ? '...' + subtitle.slice(-200) : subtitle}
             </div>
           )}
         </div>
       </div>
-      
     </div>
   );
 }

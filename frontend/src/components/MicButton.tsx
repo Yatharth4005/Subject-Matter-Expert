@@ -83,7 +83,7 @@ export default function MicButton({ onAudioData, disabled }: MicButtonProps) {
   };
 
   return (
-    <div className="mic-container">
+    <div>
       {isRecording && <AudioVisualizer />}
       <button
         className={`mic-btn ${isRecording ? 'mic-btn--active' : ''}`}

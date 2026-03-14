@@ -24,15 +24,15 @@ export default function ChatPanel({ messages, isAgentTyping, agentSlug }: ChatPa
         {messages.length === 0 && (
           <div style={{
             textAlign: 'center',
-            padding: 'var(--space-3xl) var(--space-lg)',
+            padding: 'var(--space-3xl) var(--space-xl)',
             color: 'var(--text-muted)',
           }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--space-md)' }}>🎙️</div>
-            <p style={{ fontSize: '0.95rem', marginBottom: 'var(--space-sm)' }}>
-              Start a conversation
+            <div style={{ fontSize: '3rem', marginBottom: 'var(--space-xl)', opacity: 0.5 }}>🎋</div>
+            <p style={{ fontSize: '1.2rem', fontFamily: 'var(--font-serif)', color: 'var(--text-primary)', marginBottom: 'var(--space-md)' }}>
+              How can I support your journey?
             </p>
-            <p style={{ fontSize: '0.8rem' }}>
-              Click the mic to speak, upload a video, or type your question.
+            <p style={{ fontSize: '0.95rem' }}>
+              Speak, share a video, or explore resources to begin.
             </p>
           </div>
         )}

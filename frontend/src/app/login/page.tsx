@@ -4,11 +4,11 @@ export default function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="login-card__title">SME Agent</h1>
+        <h1 className="login-card__title">The Portal</h1>
         <p className="login-card__subtitle">
-          Your AI-powered Subject Matter Expert platform.
+          Enter a grounded space for expert wisdom.
           <br />
-          Sign in to start learning with multimodal agents.
+          Natural intelligence, refined for clarity.
         </p>
         <form
           action={async () => {

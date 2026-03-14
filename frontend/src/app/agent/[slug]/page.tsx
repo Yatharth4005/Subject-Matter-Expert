@@ -27,6 +27,7 @@ export default function AgentPage() {
   const [currentSubtitle, setCurrentSubtitle] = useState<string>('');
   const [suggestions, setSuggestions] = useState<SuggestionItem[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isImmersive, setIsImmersive] = useState(false);
 
   // Streaming & Buffer State
   const spokenSentencesRef = useRef<Set<string>>(new Set());
@@ -70,8 +71,9 @@ export default function AgentPage() {
       if (msg.is_chunk) {
         setAvatarState('speaking');
         setCurrentSubtitle(prev => {
-          if (prev.includes('Processing')) return text;
-          return prev + text;
+          const combined = prev.includes('Processing') ? text : prev + text;
+          // Keep only the last 500 characters for the scrolling window
+          return combined.length > 500 ? combined.slice(-500) : combined;
         });
 
         // Add to buffer and check for complete sentences
@@ -229,7 +231,7 @@ export default function AgentPage() {
         height: 'calc(100vh - 80px)', // adjust for padding
         position: 'relative'
       }}>
-        {/* Header (Overlaid) */}
+        {/* Floating Call Header */}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -238,32 +240,91 @@ export default function AgentPage() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '1rem 2rem',
-          zIndex: 50,
-          background: 'linear-gradient(to bottom, rgba(15, 23, 42, 0.8), transparent)'
-        }}>
-          <button className="agent-page__back" onClick={() => router.push('/')} id="back-btn">
-            ← Dashboard
-          </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ fontSize: '1.2rem', padding: '0.2rem 0.6rem', background: 'rgba(255,255,255,0.1)', borderRadius: '20px' }}>
-              {agent.displayName} Agent
-            </span>
-            <span className="agent-page__status" style={connectionError ? { color: 'var(--accent-rose)' } : undefined}>
-              {isConnected ? 'LIVE' : connectionError ? 'Disconnected' : 'Connecting...'}
-            </span>
+          padding: '2.5rem 3rem',
+          zIndex: 100,
+          background: 'linear-gradient(to bottom, var(--bg-primary), transparent)',
+          transition: 'all 0.5s ease',
+          opacity: isImmersive ? 0.4 : 1,
+        }} onMouseEnter={(e) => isImmersive && (e.currentTarget.style.opacity = '1')} 
+           onMouseLeave={(e) => isImmersive && (e.currentTarget.style.opacity = '0.4')}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+            <button 
+              className="agent-page__back" 
+              onClick={() => router.push('/')}
+              style={{
+                width: '44px',
+                height: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '50%',
+                background: 'var(--bg-card)',
+                boxShadow: 'var(--shadow-md)',
+                fontSize: '1.2rem'
+              }}
+            >
+              ←
+            </button>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <h1 style={{ fontSize: '1.5rem', margin: 0 }}>{agent.displayName}</h1>
+              <div className="agent-page__status" style={{ fontSize: '0.75rem' }}>
+                {isConnected ? 'LIVE SESSION' : 'CONNECTING...'}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem' }}>
+             <button 
+              onClick={() => setIsImmersive(!isImmersive)}
+              style={{
+                padding: '10px 24px',
+                background: isImmersive ? 'var(--accent-sage)' : 'var(--bg-card)',
+                color: isImmersive ? '#fff' : 'var(--text-primary)',
+                borderRadius: 'var(--radius-full)',
+                boxShadow: 'var(--shadow-md)',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                border: '1px solid var(--border-subtle)',
+                transition: 'all 0.3s'
+              }}
+            >
+              {isImmersive ? 'Show Chat' : 'Go Immersive'}
+            </button>
+            <button 
+              onClick={() => router.push('/')}
+              style={{
+                padding: '10px 24px',
+                background: 'var(--accent-clay)',
+                color: '#fff',
+                borderRadius: 'var(--radius-full)',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                border: 'none',
+                boxShadow: 'var(--shadow-md)'
+              }}
+            >
+              End Call
+            </button>
           </div>
         </div>
 
-        {/* Center: Voice Avatar */}
-        <div style={{ 
-          flex: 1, 
-          position: 'relative', 
-          zIndex: 10, 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
+        {/* The Stage */}
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
           padding: '0 2rem',
+          marginTop: '60px',
+          background: isImmersive ? 'var(--bg-sage-glow)' : 'transparent',
+          transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+          borderRadius: isImmersive ? 'var(--radius-xl)' : '0',
+          margin: isImmersive ? '1rem' : '0',
+          marginBottom: '8rem', // Extra space for the action bar
+          overflow: 'hidden',
+          position: 'relative'
         }}>
           <VoiceAvatar 
             state={avatarState} 
@@ -282,13 +343,13 @@ export default function AgentPage() {
             width: '300px',
             maxHeight: '40vh',
             overflowY: 'auto',
-            background: 'var(--bg-card)',
-            backdropFilter: 'blur(30px)',
-            borderRadius: '16px',
+            background: 'var(--bg-glass-strong)',
+            backdropFilter: 'blur(16px)',
+            borderRadius: 'var(--radius-xl)',
             border: '1px solid var(--border-subtle)',
-            padding: '1rem',
+            padding: '1.5rem',
             zIndex: 60,
-            boxShadow: '0 10px 40px rgba(0,0,0,0.6)'
+            boxShadow: 'var(--shadow-lg)'
           }}>
             <WebDisplayPanel
               screenshotUrl={webScreenshot}
@@ -304,163 +365,71 @@ export default function AgentPage() {
           </div>
         )}
 
-        {/* Unified Bottom Action Center (Single Bar) */}
+        {/* Simplified Action Bar */}
         <div style={{
           position: 'absolute',
-          bottom: '1.5rem',
+          bottom: '2.5rem',
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '100%',
-          maxWidth: '780px',
-          padding: '0 1rem',
+          maxWidth: '580px',
+          width: '90%',
           display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
-          zIndex: 100
-        }}>
-          {/* End Session Row (Subtle) */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button 
-              onClick={() => router.push('/')}
-              style={{
-                padding: '6px 16px',
-                background: 'rgba(255,255,255,0.05)',
-                color: 'rgba(255,255,255,0.6)',
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                border: '1px solid rgba(255,255,255,0.1)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff'; }}
-              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; }}
-            >
-              End session
-            </button>
-          </div>
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1.25rem',
+          padding: '0.75rem 1.75rem',
+          background: 'rgba(255, 255, 255, 0.98)',
+          backdropFilter: 'blur(24px)',
+          borderRadius: 'var(--radius-full)',
+          boxShadow: 'var(--shadow-lg)',
+          border: '1px solid var(--border-subtle)',
+          zIndex: 150,
+          transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          opacity: isImmersive ? 0.9 : 1
+        }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+           onMouseLeave={(e) => isImmersive && (e.currentTarget.style.opacity = '0.9')}>
+          
+          <button 
+            onClick={() => document.getElementById('integrated-upload')?.click()}
+            style={{ fontSize: '1.2rem', opacity: 0.5, transition: 'opacity 0.2s' }}
+            title="Upload Content"
+            onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+            onMouseOut={(e) => e.currentTarget.style.opacity = '0.5'}
+          >
+            📎
+          </button>
+          <input 
+            id="integrated-upload"
+            type="file" 
+            accept="video/*,image/*" 
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleVideoUpload(file);
+            }}
+            style={{ display: 'none' }}
+          />
 
-          {/* Combined Action Bar */}
-          <div style={{
-            background: 'rgba(15, 15, 18, 0.92)',
-            backdropFilter: 'blur(40px)',
-            border: `1px solid ${avatarState === 'listening' ? 'var(--accent-purple)' : 'rgba(255,255,255,0.08)'}`,
-            borderRadius: '14px',
-            padding: '8px 20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-            transition: 'all 0.3s ease'
-          }}>
-            {/* Left: Attachment */}
-            <button 
-              onClick={() => document.getElementById('integrated-upload')?.click()}
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '8px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                fontSize: '1.1rem',
-                flexShrink: 0
-              }}
-              title="Attach media"
-              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-              onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
-            >
-              📎
-            </button>
-            <input 
-              id="integrated-upload"
-              type="file" 
-              accept="video/*,image/*" 
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleVideoUpload(file);
-              }}
-              style={{ display: 'none' }}
-            />
-
-            {/* Center: Status / Context */}
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '0.85rem', color: '#eee', fontWeight: 500 }}>
-                {avatarState === 'idle' && 'How can I help you today?'}
-                {avatarState === 'listening' && 'Listening... Speak now'}
-                {avatarState === 'processing' && 'Thinking...'}
-                {avatarState === 'speaking' && 'Agent is explaining...'}
-              </span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                Voice & Media Assistant
-              </span>
-            </div>
-
-            {/* Right: Controls */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
-              <button 
-                onClick={() => setShowSuggestions(!showSuggestions)}
-                style={{
-                  padding: '6px 14px',
-                  background: suggestions.length > 0 ? 'rgba(139, 92, 246, 0.12)' : 'rgba(255,255,255,0.04)',
-                  border: `1px solid ${suggestions.length > 0 ? 'rgba(139, 92, 246, 0.3)' : 'rgba(255,255,255,0.08)'}`,
-                  borderRadius: '8px',
-                  color: suggestions.length > 0 ? '#a78bfa' : 'rgba(255,255,255,0.5)',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s'
-                }}
-              >
-                <span>📚</span>
-                <span>Resources</span>
-                {suggestions.length > 0 && (
-                  <span style={{
-                    background: '#8b5cf6',
-                    color: '#fff',
-                    fontSize: '9px',
-                    padding: '1px 5px',
-                    borderRadius: '10px',
-                    marginLeft: '2px'
-                  }}>{suggestions.length}</span>
-                )}
-              </button>
-
-              <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
-              {avatarState === 'speaking' && (
-                <button
-                  onClick={handleStopSpeaking}
-                  style={{
-                    padding: '8px 16px',
-                    background: 'rgba(244, 63, 94, 0.1)',
-                    border: '1px solid rgba(244, 63, 94, 0.3)',
-                    borderRadius: '10px',
-                    color: '#ff4b6b',
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    cursor: 'pointer'
-                  }}
-                >
-                  Stop
-                </button>
-              )}
-              <div
-                onMouseDown={() => setAvatarState('listening')} 
-                onMouseUp={() => setAvatarState('processing')}
-                onMouseLeave={() => setAvatarState(prev => prev === 'listening' ? 'idle' : prev)}
-                onTouchStart={() => setAvatarState('listening')}
-                onTouchEnd={() => setAvatarState('processing')}
-              >
-                <MicButton onAudioData={handleAudioData} disabled={!isConnected} />
-              </div>
+          <div style={{ width: '1px', height: '24px', background: 'var(--border-subtle)' }} />
+          
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+              {avatarState === 'idle' && 'How can I help?'}
+              {avatarState === 'listening' && 'Listening...'}
+              {avatarState === 'processing' && 'Thinking...'}
+              {avatarState === 'speaking' && 'Speaking...'}
             </div>
           </div>
+
+          <div style={{ width: '1px', height: '24px', background: 'var(--border-subtle)' }} />
+
+          <MicButton onAudioData={handleAudioData} disabled={!isConnected} />
+          
+          <button 
+            onClick={() => setShowSuggestions(!showSuggestions)}
+            style={{ fontSize: '1.2rem', padding: '8px', background: 'var(--bg-secondary)', borderRadius: '50%' }}
+          >
+            📚
+          </button>
         </div>
       </div>
     </div>
