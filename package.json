@@ -1,0 +1,18 @@
+{
+  "name": "subject-matter-expert",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "frontend:dev": "npm run dev --prefix frontend",
+    "frontend:build": "npm run build --prefix frontend",
+    "frontend:start": "npm run start --prefix frontend",
+    "backend:dev": "cd backend && python main.py",
+    "backend:install": "pip install -r backend/requirements.txt",
+    "build": "npm run frontend:build",
+    "dev": "concurrently \"npm run frontend:dev\" \"npm run backend:dev\"",
+    "install:all": "npm install --prefix frontend && npm run backend:install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
