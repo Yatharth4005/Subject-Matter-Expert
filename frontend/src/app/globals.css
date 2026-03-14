@@ -312,67 +312,94 @@ button {
   color: var(--text-primary);
 }
 
-/* === Login Page === */
+/* === Zen Landing / Login === */
 .login-container {
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: var(--space-xl);
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
+  padding: 4rem 2rem;
+  text-align: center;
 }
 
 .login-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-  padding: var(--space-3xl);
-  text-align: center;
-  max-width: 480px;
+  max-width: 900px;
   width: 100%;
-  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.login-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #FFF5F7;
+  color: #E91E63;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 2rem;
+}
+
+.login-badge__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .login-card__title {
   font-family: var(--font-serif);
-  font-size: 2.5rem;
-  margin-bottom: var(--space-md);
+  font-size: 5.5rem;
+  line-height: 1.05;
+  font-weight: 400;
   color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 14ch;
 }
 
 .login-card__subtitle {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  margin-bottom: var(--space-3xl);
+  font-size: 1.5rem;
+  color: var(--text-muted);
   line-height: 1.6;
+  max-width: 640px;
+  margin: 2rem auto;
+  font-weight: 400;
 }
 
 .login-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-md);
-  width: 100%;
-  padding: var(--space-md) var(--space-xl);
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  gap: 1.25rem;
+  padding: 18px 56px;
+  background: #fff;
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
   border-radius: var(--radius-full);
   font-weight: 500;
-  font-size: 1rem;
-  color: var(--text-primary);
+  font-size: 1.25rem;
   transition: all var(--transition-base);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  margin-top: 3rem;
 }
 
 .login-btn:hover {
   background: var(--bg-secondary);
-  border-color: var(--border-medium);
-  transform: translateY(-1px);
+  border-color: var(--text-muted);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
 }
 
 .login-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
 }
 
 /* === Agent Interaction Page === */

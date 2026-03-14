@@ -4,12 +4,20 @@ export default function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="login-card__title">The Portal</h1>
+        <div className="login-badge">
+          <span className="login-badge__dot"></span>
+          SME PORTAL
+        </div>
+        
+        <h1 className="login-card__title">
+          A grounded space for expert wisdom
+        </h1>
+        
         <p className="login-card__subtitle">
-          Enter a grounded space for expert wisdom.
-          <br />
-          Natural intelligence, refined for clarity.
+          Your private expert companion — check in, feel supported, and stay 
+          connected with the intelligence that matters to you.
         </p>
+        
         <form
           action={async () => {
             'use server';
@@ -35,7 +43,7 @@ export default function LoginPage() {
                 fill="#EA4335"
               />
             </svg>
-            Sign in with Google
+            Continue with Google
           </button>
         </form>
       </div>
