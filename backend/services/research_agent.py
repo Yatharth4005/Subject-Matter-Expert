@@ -39,7 +39,7 @@ class ResearchAgentService:
         session_id = "temp-research"
         app_name = "sme-researcher"
 
-        print(f"DEBUG: ResearchAgent starting for context: {context[:100]}...")
+        print(f"DEBUG: ResearchAgent starting for context: {str(context)[:100]}...")
 
         # Initialize runner fresh for the request
         runner = Runner(
@@ -79,7 +79,7 @@ class ResearchAgentService:
             return []
 
         full_text = "".join(full_text_parts).strip()
-        print(f"DEBUG: Research raw response: {full_text[:200]}...")
+        print(f"DEBUG: Research raw response: {str(full_text)[:200]}...")
 
         try:
             # Clean possible markdown wrap
