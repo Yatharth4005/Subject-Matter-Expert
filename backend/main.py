@@ -139,6 +139,7 @@ async def run_adk_turn_with_audio(
     user_id: str,
     session_id: str,
     audio_bytes: bytes,
+    mime_type: str = "audio/webm",
 ):
     """Send audio bytes and yield chunks."""
     agent = get_agent_by_slug(agent_slug)
@@ -153,7 +154,7 @@ async def run_adk_turn_with_audio(
         parts=[
             genai_types.Part(
                 inline_data=genai_types.Blob(
-                    mime_type="audio/webm",
+                    mime_type=mime_type,
                     data=audio_bytes,
                 )
             ),
@@ -221,12 +222,14 @@ async def websocket_endpoint(websocket: WebSocket, agent_slug: str, background_t
                 })
 
                 # Run through ADK with audio directly
+                mime_type = data.get("mimeType", "audio/webm")
                 full_response = []
                 async for chunk in run_adk_turn_with_audio(
                     agent_slug=agent_slug,
                     user_id=user_id,
                     session_id=adk_session_id,
                     audio_bytes=audio_bytes,
+                    mime_type=mime_type,
                 ):
                     full_response.append(chunk)
                     await websocket.send_json({

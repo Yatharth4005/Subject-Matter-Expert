@@ -42,13 +42,13 @@ export default function StatsCard({
 
   // Build sparkline path
   const buildSparkline = () => {
-    if (!sparklineData.length) return '';
+    if (!sparklineData.length) return 'M0,32';
     const max = Math.max(...sparklineData);
     const min = Math.min(...sparklineData);
     const range = max - min || 1;
     const width = 120;
     const height = 32;
-    const stepX = width / (sparklineData.length - 1);
+    const stepX = width / (sparklineData.length - 1 || 1);
 
     const points = sparklineData.map((v, i) => {
       const x = i * stepX;

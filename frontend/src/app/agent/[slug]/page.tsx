@@ -141,18 +141,16 @@ export default function AgentPage() {
   });
 
   const handleAudioData = useCallback(
-    (audioBase64: string) => {
+    (audioBase64: string, mimeType: string) => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
       spokenSentencesRef.current.clear();
       currentSentenceBufferRef.current = '';
-      spokenSentencesRef.current.clear();
-      currentSentenceBufferRef.current = '';
       setCurrentSubtitle('');
       setSuggestions([]); // Clear suggestions for new query
 
-      sendMessage({ type: 'audio', data: audioBase64 });
+      sendMessage({ type: 'audio', data: audioBase64, mimeType });
       setAvatarState('processing');
     },
     [sendMessage],

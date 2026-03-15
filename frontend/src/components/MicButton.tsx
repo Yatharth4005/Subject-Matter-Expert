@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 
 interface MicButtonProps {
-  onAudioData: (audioBase64: string) => void;
+  onAudioData: (audioBase64: string, mimeType: string) => void;
   disabled?: boolean;
 }
 
@@ -26,9 +26,23 @@ export default function MicButton({ onAudioData, disabled }: MicButtonProps) {
       streamRef.current = stream;
       chunksRef.current = [];
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm;codecs=opus',
-      });
+      const getMimeType = () => {
+        const types = [
+          'audio/webm;codecs=opus',
+          'audio/webm',
+          'audio/mp4',
+          'audio/ogg;codecs=opus',
+          'audio/wav',
+        ];
+        return types.find((t) => MediaRecorder.isTypeSupported(t)) || '';
+      };
+
+      const mimeType = getMimeType();
+      if (!mimeType) {
+        throw new Error('No supported audio mime type found for MediaRecorder');
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
       mediaRecorderRef.current = mediaRecorder;
 
       // Collect chunks — don't send yet
@@ -51,7 +65,7 @@ export default function MicButton({ onAudioData, disabled }: MicButtonProps) {
             '',
           ),
         );
-        onAudioData(base64);
+        onAudioData(base64, mimeType);
         chunksRef.current = [];
       };
 

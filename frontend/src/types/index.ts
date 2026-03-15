@@ -46,6 +46,7 @@ export interface WSMessage {
   imageUrl?: string;
   is_chunk?: boolean;
   items?: SuggestionItem[];
+  mimeType?: string;
 }
 
 // Dashboard stats
