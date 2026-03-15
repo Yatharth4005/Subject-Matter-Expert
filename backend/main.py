@@ -66,7 +66,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL, "http://localhost:3000"],
+    allow_origin_regex="https://.*\\.run\\.app|http://localhost:3000|http://127\\.0\\.0\\.1:3000|http://192\\.168\\..*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -180,6 +180,8 @@ async def health():
 
 @app.websocket("/ws/session/{agent_slug}")
 async def websocket_endpoint(websocket: WebSocket, agent_slug: str, background_tasks: BackgroundTasks):
+    origin = websocket.headers.get("origin")
+    logger.info(f"Connecting from origin: {origin}")
     await websocket.accept()
     session = session_manager.create(agent_slug, websocket)
 
