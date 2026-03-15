@@ -11,6 +11,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Build-time environment variables
+ARG NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+
 # Provide a dummy DATABASE_URL if not present to satisfy the build step
 ENV DATABASE_URL="postgresql://db:db@localhost:5432/db"
 ENV NEXT_TELEMETRY_DISABLED 1
