@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useWebSocket } from '@/hooks/useWebSocket';
-import { AGENTS } from '@/lib/constants';
+import { AGENTS, BACKEND_URL } from '@/lib/constants';
 import { Message, WSMessage } from '@/types';
 import VoiceAvatar from '@/components/VoiceAvatar';
 import MicButton from '@/components/MicButton';
@@ -223,6 +223,9 @@ export default function AgentPage() {
           </button>
         </div>
       )}
+      <div style={{ position: 'fixed', bottom: 10, right: 10, fontSize: '10px', opacity: 0.5, color: 'var(--text-muted)', zIndex: 9999 }}>
+        Debug: {BACKEND_URL} | {isConnected ? 'Connected' : 'Connecting...'}
+      </div>
       <div className="immersive-layout" style={{
         display: 'flex',
         flexDirection: 'column',
